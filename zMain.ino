@@ -1,11 +1,6 @@
 
 #include <SPI.h>
 
-
-
-
-
-
 ISR(TIMER3_COMPA_vect){
     if (btnPressed == 1)
     {buttonHeld[0] = 1;}
@@ -25,12 +20,6 @@ void setup() {
   fnt_controller.createSmallDictionary(small_numbs,8,7);
 
   homeInit();
-  //musicUI();
-  //navStartUI();
-  //navRouteUI();
-  //rideStartUI();
-  //rideRunningUI();
-  
   delay(1000);
 }
 
