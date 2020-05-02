@@ -34,11 +34,28 @@ bitmapLetter fnt_controller(0,0,0x00,0,0);
 bitmapLetter zelda_alph[0x7F];
 bitmapLetter small_numbs[0xA];
 
-char testStr[] = "Comfortably Numb";
-char testStr2[] = "Pink Floyd";
+// Home Char Arrays
+char timeStr[] = "11:50pm";
 
-char testStr3[] = "00:00";
-char testStr4[] = "06:22";
+// Music Char Arrays
+char trackStr[] = "Comfortably Numb";
+char artistStr[] = "Pink Floyd";
+char positionStr[] = "00:00";
+char trackLengthStr[] = "06:22";
+
+// Navigation Char Arrays
+char instrStr[] = "Left on Burlington St";
+char instrDistStr[] = "800 ft";
+char timeRemainingStr[] = "2:30 hr";
+char distRemainingStr[] = "1.25 mi";
+
+// Ride Char Arrays
+char currentSpeedStr[] = "10.5 mph";
+char avgSpeedStr[] = "AVG: 5.5 mph";
+char rideTimeStr[] = "0:45:02";
+char distTraveledStr[] = "0.25 mi";
+
+int screen = 0;
 
 void setup() {
   
@@ -51,42 +68,50 @@ void setup() {
   fnt_controller.createDictionary(zelda_alph,8,16);
   fnt_controller.createSmallDictionary(small_numbs,8,7);
 
-
-  disp.drawText(180,0,zelda_alph,testStr,sizeof(testStr),0x00);
-  delay(10);
-  disp.drawText(180,16,zelda_alph,testStr2,sizeof(testStr2),0x00);
-  delay(10);
-  disp.drawText(180,45,small_numbs,testStr3,sizeof(testStr3),0x30);
-  delay(10);
-  disp.drawText(36,45,small_numbs,testStr4,sizeof(testStr4),0x30);
-  delay(10);
-  
-  disp.drawRect(0,55,180,4,true,(uint8_t)0x0);
-  delay(10);
-  disp.drawBitmap(106,35,16,16,shuffle_bits,sizeof(shuffle_bits));
-  delay(10);
-  disp.drawBitmap(70,35,16,16,repeat_bits,sizeof(repeat_bits));
-  delay(10);
-  disp.drawBitmap(192,0,64,64,wall_bits1,sizeof(wall_bits1));
-  delay(10);
-  
+  homeUI();
+  // musicUI();
+  // navStartUI();
+  // navRouteUI();
+  // rideStartUI();
+  // rideRunningUI();
   
   delay(1000);
 }
 
 void loop() {
 checkButtonStatus(buttonState);
-disp.drawRect(0,55,180,4,true,(uint8_t)0x0);
-  for (int w=180; w>0; w--)
-  {
-    
-    disp.drawRect(0,55,w,4,true,(uint8_t)0x0);
-    disp.drawRect(w,55,180-(w-1),4,true,(uint8_t)0xF);
-    //disp.drawBitmap(w-2,54,4,7,second_marker,sizeof(second_marker));
-    
- 
-    delay(100);
-  }
+
+switch(screen) {
+
+  case 0:
+    homeUI();
+    break;
+  case 1:
+    musicUI();
+    break;
+  case 2:
+    navStartUI();
+    break;
+  case 3:
+    rideStartUI();
+    break;
+  default:
+    homeUI();
+    break;        
+  
+}
+
+// disp.drawRect(0,55,180,4,true,(uint8_t)0x0);
+//  for (int w=180; w>0; w--)
+//  {
+//    
+//    disp.drawRect(0,55,w,4,true,(uint8_t)0x0);
+//    disp.drawRect(w,55,180-(w-1),4,true,(uint8_t)0xF);
+//    //disp.drawBitmap(w-2,54,4,7,second_marker,sizeof(second_marker));
+//    
+// 
+//    delay(100);
+//  }
 }
 
 
@@ -167,6 +192,13 @@ void checkButtonStatus(int pastBtnState[]){
         if (buttonHeld[0] == 1)
           {
           Serial.println("Button 1 has been held");
+//          if(screen == 0) {
+//            screen = 3;
+//          } else {
+//            screen = screen - 1;
+//          }
+          Serial.println(screen);
+          disp.wipeDisplay();
           buttonHeld[0] = 0;
           }
           TCCR0B |= (0<<CS02)|(0<<CS00);
@@ -207,6 +239,13 @@ void checkButtonStatus(int pastBtnState[]){
        if (buttonHeld[2] == 1)
           {
           Serial.println("Button 3 has been held");
+//          if(screen == 3) {
+//            screen = 0;
+//          } else {
+//            screen++;
+//          }
+          Serial.println(screen);
+          disp.wipeDisplay();
           buttonHeld[2] = 0;
           }
           TCCR3B |= (0<<CS32)|(0<<CS30);
@@ -226,4 +265,112 @@ bool isButtonPressed(int button){
   else{
     return false;
   }
+}
+
+void homeUI() {
+
+  disp.drawText(140,24,zelda_alph,timeStr,sizeof(timeStr)-1,0x00);
+  delay(10);
+  
+}
+
+void musicUI() {
+
+  disp.drawText(180,0,zelda_alph,trackStr,sizeof(trackStr)-1,0x00);
+  delay(10);
+  disp.drawText(180,16,zelda_alph,artistStr,sizeof(artistStr)-1,0x00);
+  delay(10);
+  disp.drawText(180,45,small_numbs,positionStr,sizeof(positionStr)-1,0x30);
+  delay(10);
+  disp.drawText(36,45,small_numbs,trackLengthStr,sizeof(trackLengthStr)-1,0x30);
+  delay(10);
+  
+  disp.drawRect(0,55,180,4,true,(uint8_t)0x0);
+  delay(10);
+  disp.drawBitmap(106,35,16,16,shuffle_bits,sizeof(shuffle_bits));
+  delay(10);
+  disp.drawBitmap(70,35,16,16,repeat_bits,sizeof(repeat_bits));
+  delay(10);
+  disp.drawBitmap(192,0,64,64,wall_bits1,sizeof(wall_bits1));
+  delay(10);
+  
+}
+
+void navStartUI() {
+
+  const char routeSelectStr1[] = "Start a Route from the";
+  const char routeSelectStr2[] = "Arrow App";
+
+  disp.drawText(200,16,zelda_alph,routeSelectStr1,sizeof(routeSelectStr1)-1,0x00);
+  delay(10);
+  disp.drawText(160,32,zelda_alph,routeSelectStr2,sizeof(routeSelectStr2)-1,0x00);
+  delay(10);
+  
+}
+
+void navRouteUI() {
+
+  const char arrival[] = "Arrival";
+
+  // Instruction
+  disp.drawText(240,0,zelda_alph,instrDistStr,sizeof(instrDistStr)-1,0x00);
+  delay(10);
+  disp.drawText(240,16,zelda_alph,instrStr,sizeof(instrStr)-1,0x00);
+  delay(10);
+
+  disp.drawRect(0,45,256,20,true,(uint8_t)0x0);
+  delay(10);
+
+  // Arrival
+  disp.drawText(240,48,zelda_alph,arrival,sizeof(arrival)-1,0x00);
+  delay(10);
+  disp.drawText(160,48,zelda_alph,timeRemainingStr,sizeof(timeRemainingStr)-1,0x00);
+  delay(10);
+  disp.drawText(80,48,zelda_alph,distRemainingStr,sizeof(distRemainingStr)-1,0x00);
+  delay(10);
+  
+}
+
+void rideStartUI() {
+
+  const char rideSelectStr1[] = "Start a Ride";
+  const char rideSelectStr2[] = "by pressing";
+  const char rideSelectStr3[] = "the center";
+  const char rideSelectStr4[] = "button";
+
+  // Selection Message
+  disp.drawText(100,0,zelda_alph,rideSelectStr1,sizeof(rideSelectStr1)-1,0x00);
+  delay(10);
+  disp.drawText(100,16,zelda_alph,rideSelectStr2,sizeof(rideSelectStr2)-1,0x00);
+  delay(10);
+  disp.drawText(100,32,zelda_alph,rideSelectStr1,sizeof(rideSelectStr1)-1,0x00);
+  delay(10);
+  disp.drawText(100,48,zelda_alph,rideSelectStr2,sizeof(rideSelectStr2)-1,0x00);
+  delay(10);
+
+  // Speed
+  disp.drawText(220,24,zelda_alph,currentSpeedStr,sizeof(currentSpeedStr)-1,0x00);
+  delay(10);
+
+  disp.drawRect(127,0,1,64,true,(uint8_t)0x0);
+  delay(10);
+  
+}
+
+void rideRunningUI() {
+
+  disp.drawText(220,8,zelda_alph,currentSpeedStr,sizeof(currentSpeedStr)-1,0x00);
+  delay(10);
+  disp.drawText(240,40,zelda_alph,avgSpeedStr,sizeof(avgSpeedStr)-1,0x00);
+  delay(10);
+  disp.drawText(80,8,zelda_alph,rideTimeStr,sizeof(rideTimeStr)-1,0x00);
+  delay(10);
+  disp.drawText(80,40,zelda_alph,distTraveledStr,sizeof(distTraveledStr)-1,0x00);
+  delay(10);
+
+  disp.drawRect(127,0,1,64,true,(uint8_t)0x0);
+  delay(10);
+  disp.drawRect(0,31,255,1,true,(uint8_t)0x0);
+  delay(10);
+  
 }
