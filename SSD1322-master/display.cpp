@@ -20,10 +20,10 @@ void Display_obj::setupDisplay()
 
   //Itinialize values for pins
   digitalWrite(DC, LOW);  //Command vs Data
-  digitalWrite(CS, LOW);  //Chip Select
+  digitalWrite(CS, HIGH);  //Chip Select
   digitalWrite(MOSI, LOW);  //Master Out Slave In
   digitalWrite(SCK, LOW); //Clock
-  digitalWrite(SS, HIGH); //Slave Select
+ // digitalWrite(SS, HIGH); //Slave Select
   digitalWrite(MISO, LOW);  //Master In Slave Out
 
   digitalWrite(RST, LOW); //pull /RES (pin #16) low
@@ -49,9 +49,11 @@ void Display_obj::setupDisplay()
 void Display_obj::writeCommand(int binary)
 {
   digitalWrite(DC, LOW);
+  digitalWrite(CS,LOW);
   SPI.beginTransaction(SPISettings(8000000, MSBFIRST, SPI_MODE0));
   SPI.transfer(binary);
   SPI.endTransaction();
+  digitalWrite(CS,HIGH);
 }
 
 /*
@@ -63,9 +65,11 @@ void Display_obj::writeCommand(int binary)
 void Display_obj::writeData(int binary)
 {
   digitalWrite(DC, HIGH);
+  digitalWrite(CS,LOW);
   SPI.beginTransaction(SPISettings(8000000, MSBFIRST, SPI_MODE0));
   SPI.transfer(binary);
   SPI.endTransaction();
+  digitalWrite(CS,HIGH);
 }
 
 /*
@@ -346,7 +350,7 @@ void Display_obj::drawBitmap(double xPos, double yPos, double width, double heig
   //Nibbles are added in the order of High_Byte(lowNibble,HighNibble), Low_Byte(lowNibble,HighNibble)
   for (h = 0; h < height; h++)
   {
-    Serial.println(" ");
+    //Serial.println(" ");
     if (padBeginning == 1)
     {
       //Serial.print("1 F F F");
