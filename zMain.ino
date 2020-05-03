@@ -19,14 +19,14 @@ void setup() {
   fnt_controller.createDictionary(zelda_alph,8,16);
   fnt_controller.createSmallDictionary(small_numbs,8,7);
 
-  homeInit();
+  musicInit();
   delay(1000);
 }
 
 void loop() {
 checkButtonStatus(buttonState);
 
-
+/*
 switch(screen) {
 
   case 0:
@@ -66,4 +66,5 @@ switch(screen) {
     break;        
   
 }
+*/
 }

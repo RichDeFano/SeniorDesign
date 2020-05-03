@@ -24,12 +24,12 @@ bool pageInit = false;
 
 // Home Char Arrays
 char timeStr[] = "11:50pm";
-
+char dateStr[] = "5/3/2020";
 // Music Char Arrays
-char trackStr[] = "Comfortably Numb";
-char artistStr[] = "Pink Floyd";
+char trackStr[] = "Gainz";
+char artistStr[] = "Deadlyft";
 char positionStr[] = "00:00";
-char trackLengthStr[] = "06:22";
+char trackLengthStr[] = "03:53";
 
 // Navigation Char Arrays
 char instrStr[] = "Left on Burlington St";
@@ -222,11 +222,15 @@ void buttonAction(int button, bool held){
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 void homeInit() {
-  disp.drawText(140,24,zelda_alph,timeStr,sizeof(timeStr)-1,0x00);
+  disp.drawText(140,8,zelda_alph,timeStr,sizeof(timeStr)-1,0x00);
   delay(10);
+  disp.drawText(140,8,zelda_alph,dateStr,sizeof(dateStr)-1,0x00);
   pageInit = true;
   Serial.println("Initialized Home.");
-  
+}
+
+void homeUpdate(){
+  //Need to update time text once a minute
   
 }
 
@@ -247,7 +251,7 @@ void musicInit() {
   delay(10);
   disp.drawBitmap(70,35,16,16,repeat_bits,sizeof(repeat_bits));
   delay(10);
-  disp.drawBitmap(192,0,64,64,wall_bits1,sizeof(wall_bits1));
+  disp.drawBitmap(192,0,64,64,deadlyft_bits,sizeof(deadlyft_bits));
   delay(10);
 
 pageInit = true;
@@ -257,6 +261,7 @@ pageInit = true;
 
 void musicUpdate(){
   //Update position string and track length
+  /*
   disp.drawText(180,45,small_numbs,positionStr,sizeof(positionStr)-1,0x30);
   delay(10);
   disp.drawText(36,45,small_numbs,trackLengthStr,sizeof(trackLengthStr)-1,0x30);
@@ -268,6 +273,7 @@ void musicUpdate(){
     disp.drawRect(w,55,180-(w-1),4,true,(uint8_t)0xF);
     delay(100);
   }
+  */
 }
 
 void navStartInit() {
@@ -311,6 +317,10 @@ pageInit = true;
   
 }
 
+void navRouteUpdate(){
+  
+}
+
 void rideStartInit() {
 
   const char rideSelectStr1[] = "Start a Ride";
@@ -323,9 +333,9 @@ void rideStartInit() {
   delay(10);
   disp.drawText(100,16,zelda_alph,rideSelectStr2,sizeof(rideSelectStr2)-1,0x00);
   delay(10);
-  disp.drawText(100,32,zelda_alph,rideSelectStr1,sizeof(rideSelectStr1)-1,0x00);
+  disp.drawText(100,32,zelda_alph,rideSelectStr3,sizeof(rideSelectStr1)-1,0x00);
   delay(10);
-  disp.drawText(100,48,zelda_alph,rideSelectStr2,sizeof(rideSelectStr2)-1,0x00);
+  disp.drawText(100,48,zelda_alph,rideSelectStr4,sizeof(rideSelectStr2)-1,0x00);
   delay(10);
 
   // Speed
