@@ -20,6 +20,8 @@ class Display_obj
     void drawSegmentedBitmap(double xPos, double yPos, Bitmap& b, int ms);
     void drawAnimatedBitmap(double xPos, double yPos, Bitmap& b, int ms);
     void drawText(double xPos, double yPos, bitmapLetter alph[],char str[],int stringSize,uint8_t asciiBuff);
+    void pullCSLow();
+    void pullCSHigh();
     
 private:
     void writeCommand(int binary);

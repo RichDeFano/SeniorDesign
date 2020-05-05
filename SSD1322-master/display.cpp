@@ -20,7 +20,7 @@ void Display_obj::setupDisplay()
 
   //Itinialize values for pins
   digitalWrite(DC, LOW);  //Command vs Data
-  digitalWrite(CS, HIGH);  //Chip Select
+  digitalWrite(CS, LOW);  //Chip Select
   digitalWrite(MOSI, LOW);  //Master Out Slave In
   digitalWrite(SCK, LOW); //Clock
  // digitalWrite(SS, HIGH); //Slave Select
@@ -35,9 +35,19 @@ void Display_obj::setupDisplay()
   defaultDisplay(); //Set Default Settings
   writeCommand(0xA5); //Turn on Display
   wipeDisplay();  //Clear all pixels possibly stored in GDDRAM of display
-  Serial.println("Display Initialized.");
+  //Serial.println("Display Initialized.");
   delay(100);
 
+ // digitalWrite(CS,HIGH);
+
+}
+
+void Display_obj::pullCSLow(){
+  digitalWrite(CS,LOW);
+}
+
+void Display_obj::pullCSHigh(){
+  digitalWrite(CS,HIGH);
 }
 
 /*
@@ -49,11 +59,11 @@ void Display_obj::setupDisplay()
 void Display_obj::writeCommand(int binary)
 {
   digitalWrite(DC, LOW);
-  digitalWrite(CS,LOW);
+ //digitalWrite(CS,LOW);
   SPI.beginTransaction(SPISettings(8000000, MSBFIRST, SPI_MODE0));
   SPI.transfer(binary);
   SPI.endTransaction();
-  digitalWrite(CS,HIGH);
+  //digitalWrite(CS,HIGH);
 }
 
 /*
@@ -65,11 +75,11 @@ void Display_obj::writeCommand(int binary)
 void Display_obj::writeData(int binary)
 {
   digitalWrite(DC, HIGH);
-  digitalWrite(CS,LOW);
+  //digitalWrite(CS,LOW);
   SPI.beginTransaction(SPISettings(8000000, MSBFIRST, SPI_MODE0));
   SPI.transfer(binary);
   SPI.endTransaction();
-  digitalWrite(CS,HIGH);
+  //digitalWrite(CS,HIGH);
 }
 
 /*
@@ -802,8 +812,8 @@ void Display_obj::drawAnimatedBitmap(double xPos, double yPos, Bitmap &b, int ms
   }
 }
 
-
 /*
+
   Function Name: drawText
   Funciton Parameters: (int) xPos - The x position of the(start) of the text
                       (int yPos) - The y position of the (start) of the text
@@ -818,7 +828,13 @@ int startX = xPos;
 int startY = yPos;
     for (int i=0; i < stringSize; i++){
       char charAt = str[i];
-    uint16_t ascii = (uint16_t)charAt;
+      uint16_t ascii = (uint16_t)charAt;
+      if (ascii > 0x60)
+     {
+      charAt = charAt & ~(0x20);
+      ascii = ascii &   ~(0x20);
+    }
+    
     int width = alph[ascii-asciiBuff].getWidth();
     int height = alph[ascii-asciiBuff].getHeight();
     size_t siz = alph[ascii-asciiBuff].getSize();
@@ -829,8 +845,9 @@ int startY = yPos;
     if (startX <= 0)
     {
       startX = xPos;
-      startY = startY+16;
+      startY = startY+8;
     }
 
   }
 }
+
